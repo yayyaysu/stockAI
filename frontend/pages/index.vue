@@ -7,20 +7,17 @@
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      users: [],
-    };
-  },
-  async mounted() {
-    try {
-      const response = await this.$axios.get('/users');
-      this.users = response.data;
-    } catch (error) {
-      console.error('Error fetching users:', error);
-    }
-  },
-};
+<script setup>
+import { useFetch, useRuntimeConfig } from '#app';
+
+const config = useRuntimeConfig();
+const { data, error } = await useFetch('/users', {
+  baseURL: config.public.apiBase,
+});
+
+if (error.value) {
+  console.error('Error fetching users:', error.value);
+}
+
+const users = data.value || [];
 </script>
